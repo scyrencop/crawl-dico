@@ -1,0 +1,14 @@
+{
+  "name": "Scorbis",
+  "version": "1.0.0",
+  "description": "Create an offline dictionary db from web scrapping",
+  "main": "index.js",
+  "author": "mehdi.all.go@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "cheerio-req": "^1.2.3",
+    "request": "^2.88.0",
+  }
+}
