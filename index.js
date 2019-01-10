@@ -7,16 +7,17 @@ const cheerio = require('cheerio');
 var program = require('commander');
 
 var internaute = require("./dico/fr_internaute.js")
+var collins = require("./dico/en_collins.js")
 
 // console.log("what : " + internaute.recursiveMap());
 //  return false;
 program
 	.version('0.1.0')
-	.option('-l, --lang [lang]', 'Choose language [fr,en,fr-en,en-fr]')
+	.option('-l, --lang [lang]', 'Choose language [fr,en,fr-en,en-fr]', 'fr')
 	.option('-w, --word [word]', 'Add a word [word]')
 	.option('-s, --syn', 'Synonymes')
 	.option('-c, --cit', 'Citation')
-	.option('-d, --def', 'Definition')
+	.option('-d, --def', 'Definition', 'def')
 	.parse(process.argv);
 
 
@@ -28,15 +29,26 @@ if (program.word) {
 	process.exit();
 }
 
+
+defaultDef = 'def';
+
 var definitions = {};
 var synonymes = [];
 var citations = {};
 
 
+
+	if( program.lang == 'fr' ){
+		url_dico = 'https://www.linternaute.fr/dictionnaire/fr/definition/';
+	}else if( program.lang == 'en' ){
+		url_dico = 'https://www.collinsdictionary.com/dictionary/english/';
+	}
+
+
 function initialize() {
 	// Setting URL and headers for request
 	var options = {
-		url: 'https://www.linternaute.fr/dictionnaire/fr/definition/' + word,
+		url: url_dico + word,
 	};
 	// Return new promise 
 	return new Promise(function (resolve, reject) {
@@ -52,20 +64,45 @@ function initialize() {
 					normalizeWhitespace: false
 				});
 
-				// Definition
-				internaute.getDefinition($, definitions);
-
-				// Get synonymes
-				internaute.getSynonymes($, synonymes);
-
+				console.log('program def ', program.def);
+				
+				// Get Synonymes
+				if (program.syn){
+					defaultDef = '';
+					if (program.lang == 'fr') {
+						internaute.getSynonymes($, synonymes);
+					} else if (program.lang == 'en') {
+						collins.getSynonymes($, synonymes);
+					}
+				}
+				
 				// Get Citations
-				internaute.getCitations($, citations);
+				if (program.cit){
+					defaultDef = '';
+					if (program.lang == 'fr') {
+						internaute.getCitations($, citations);
+					} else if (program.lang == 'en') {
+						collins.getCitations(citations);
+					}
+				}
+				
+				//Get Definition
+				if (defaultDef == 'def' || program.def){
+					if (program.lang == 'fr' ) {
+						internaute.getDefinition($, definitions);
+					}else if(program.lang =='en'){
+						collins.getDefinition($, definitions);				
+					}
+				}
+				
 
 				result = {
 					"definitions": definitions,
 					"synonymes": synonymes,
 					"citations": citations,
 				}
+				// console.log('result: ',result);
+				
 				resolve(result);
 			}
 		})
