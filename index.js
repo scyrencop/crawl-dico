@@ -13,7 +13,7 @@ var collins = require("./dico/en_collins.js")
 //  return false;
 program
 	.version('0.1.0')
-	.option('-l, --lang [lang]', 'Choose language [fr,en,fr-en,en-fr]', 'fr')
+	.option('-l, --lang [lang]', 'Choose language [fr,en,fr-en,en-fr]', /^(fr|en|fr-en|en-fr)$/i,  'fr')
 	.option('-w, --word [word]', 'Add a word [word]')
 	.option('-s, --syn', 'Synonymes')
 	.option('-c, --cit', 'Citation')
