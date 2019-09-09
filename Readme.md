@@ -1,3 +1,3 @@
 # Scorbis
 
-A CLI dictionary, developped by nodejs to search adn create an offline database dictionary from web !
+A CLI dictionary, developped by nodejs to search and create an offline database dictionary from web !
